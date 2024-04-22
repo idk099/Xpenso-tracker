@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "385376012479",
+    "project_id": "xpenso-tracker",
+    "storage_bucket": "xpenso-tracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:385376012479:android:ea32659d8bc4b58a249e0a",
+        "android_client_info": {
+          "package_name": "com.example.xpenso"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "385376012479-k0u2i6l3u0fnn3kgs7auve9orp5plb6g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.xpenso",
+            "certificate_hash": "6d0bc2bdcab9d01eac87ef94cda2b7b6c4e63015"
+          }
+        },
+        {
+          "client_id": "385376012479-f6bfbn24j3us6cjjigj6upjeh0ut187u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDef0-pnacMzLb49DF3EMOklLp-U0FG_Rw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "385376012479-f6bfbn24j3us6cjjigj6upjeh0ut187u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "385376012479-ujmkj6kom79dq511nunbhopfjvkbe7n3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.xpenso"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
