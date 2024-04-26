@@ -45,7 +45,7 @@ class _WelcomeState extends State<Welcome> {
         child: Column(
           children: [
             Image.asset(
-              'assets/images/X.png',
+              'assets/images/Xpensologo.png',
               height: 220,
             ),
             Expanded(

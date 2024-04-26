@@ -45,7 +45,7 @@ class _SigninState extends State<Signin> {
           child: Column(
             children: [
               Image.asset(
-                'assets/images/X.png',
+                'assets/images/Xpensologo.png',
                 height: 220,
               ),
               Expanded(

@@ -39,7 +39,7 @@ class _ForgotState extends State<Forgot> {
                     width:300,
                     
                     
-                    child: Image.asset('assets/images/X.png')),
+                    child: Image.asset('assets/images/Xpensologo.png')),
                   
                   
                   Expanded(
