@@ -12,13 +12,11 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final Authenticate _auth = Authenticate();
-  
 
-  
   @override
   Widget build(BuildContext context) {
-  final uid = FirebaseAuth.instance.currentUser?.uid;
-  final userRef = FirebaseFirestore.instance.collection('User').doc(uid);
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    final userRef = FirebaseFirestore.instance.collection('User').doc(uid);
     double screenWidth = MediaQuery.of(context).size.width;
     double responsivePadding = screenWidth * 0.05;
     return Scaffold(
@@ -55,35 +53,48 @@ class _HomeState extends State<Home> {
               height: 30,
             ),
             Row(
-              children: [
-                Padding(
-                    padding: EdgeInsets.all(responsivePadding),
-                    child: StreamBuilder<DocumentSnapshot>(
-            stream: userRef.snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                final userName = snapshot.data?.get('Name') ?? 'User';
-                return Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(responsivePadding),
-                      child: Text(
-                        "Hello, $userName!",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+              children: [SizedBox( height: 78,
+                child: StreamBuilder<DocumentSnapshot>(
+                        stream: userRef.snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return SizedBox(
+                height: 30,
+                            );
+                          }
+                
+                          if (snapshot.hasError) {
+                            return  SizedBox(
+                height: 30,
+                            );
+                          }
+                
+                          if (!snapshot.hasData || !snapshot.data!.exists) {
+                            return SizedBox(
+                height: 30,
+                            );
+                          }
+                
+                          final userName = snapshot.data!['Name'];
+                
+                          return Center(
+                            child: Padding(
+                padding:  EdgeInsets.all(responsivePadding),
+                child: SizedBox(
+                  height: 30,
+                  child: Text(
+                    'Hello, $userName',
+                    style: TextStyle(fontSize: 24,color: Colors.white,fontWeight: FontWeight.bold),
+                  ),
+                ),
+                            ),
+                          );
+                        },
                       ),
-                    )
-                  ],
-                );
-              }
-            },
-          ),
-            )],
+              ),
+                
+              
+              ],
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: responsivePadding),
@@ -93,8 +104,9 @@ class _HomeState extends State<Home> {
                     borderRadius: BorderRadius.circular(20),
                     color: Colors.white),
               ),
-            )
-          ],
+            ),
+          
+           ],
         ),
       ),
     );
