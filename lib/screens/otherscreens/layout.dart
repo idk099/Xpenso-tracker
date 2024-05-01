@@ -36,8 +36,9 @@ class _MyHomePageState extends State<Pagelayout> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: (){}),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+      resizeToAvoidBottomInset: false,
+     
        
       extendBody: true,
       body: IndexedStack(
@@ -54,14 +55,14 @@ class _MyHomePageState extends State<Pagelayout> {
             key: _page2,
             onGenerateRoute: (route) => MaterialPageRoute(
               settings: route,
-              builder: (context) => Records(),
+              builder: (context) => Budget(),
             ),
           ),
           Navigator(
             key: _page3,
             onGenerateRoute: (route) => MaterialPageRoute(
               settings: route,
-              builder: (context) => Budget(),
+              builder: (context) => Records(),
             ),
             
           ),
