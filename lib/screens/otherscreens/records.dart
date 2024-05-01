@@ -23,16 +23,34 @@ class _RecordsState extends State<Records> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Center(
+            child: Padding(
+          padding: const EdgeInsets.only(
+            top: 30,
+          ),
+          child: SizedBox(
+              height: 120,
+              child: Image.asset(
+                'assets/images/appbarlogo.png',
+                fit: BoxFit.cover,
+              )),
+        )),
         backgroundColor: Colors.blue,
-        title: Text(
-          'Records',
-          style: TextStyle(color: Colors.white),
-        ),
       ),
       body: Container(
-        color: Color(0xffcaf0f8),
+        color: Colors.white,
         child: Column(
           children: [
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                'Expense Overview', // Add your desired title text here
+                style: TextStyle(
+                  letterSpacing: 2,
+                  fontSize: 20,
+                ),
+              ),
+            ),
             Expanded(
               child: _buildExpenseList(),
             ),
@@ -95,10 +113,10 @@ class ExpenseCard extends StatelessWidget {
       color: Color(0xff90e0ef),
       margin: EdgeInsets.all(8.0),
       child: ListTile(
-        leading: Icon(Icons.attach_money),
+        leading: Icon(Icons.currency_rupee),
         title: Text(category),
         subtitle:
-            Text('\$$amount - ${DateFormat('dd MMMM yyyy').format(date)}'),
+            Text('\₹$amount - ${DateFormat('dd MMMM yyyy').format(date)}'),
       ),
     );
   }

@@ -8,13 +8,11 @@ import 'package:xpenso/screens/splash.dart';
 import 'package:xpenso/screens/streambuilder.dart';
 import 'package:flutter/services.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  
-  
+
   runApp(const MyApp());
 }
 
@@ -46,7 +44,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:  Splash(),
+      home: Splash(),
     );
   }
 }
