@@ -5,9 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class AddExpensePage extends StatefulWidget {
-  
-
- 
   @override
   _AddExpensePageState createState() => _AddExpensePageState();
 }
@@ -43,29 +40,34 @@ class _AddExpensePageState extends State<AddExpensePage> {
     userRef = FirebaseFirestore.instance.collection('User').doc(uid);
     _selectedCategory = _categories.first;
     _selectedDate = DateTime.now();
-      _fetchCategories();
+    _fetchCategories();
   }
- Future<void> _fetchCategories() async {
-  final categoriesSnapshot = await FirebaseFirestore.instance.collection('categories').get();
-  setState(() {
-    final fetchedCategories = categoriesSnapshot.docs.map((doc) => doc['category'] as String).toList();
-    _categories.addAll(fetchedCategories);
-    _selectedCategory = _categories.first;
-  });
-}
 
-
+  Future<void> _fetchCategories() async {
+    final categoriesSnapshot =
+        await FirebaseFirestore.instance.collection('categories').get();
+    setState(() {
+      final fetchedCategories = categoriesSnapshot.docs
+          .map((doc) => doc['category'] as String)
+          .toList();
+      _categories.addAll(fetchedCategories);
+      _selectedCategory = _categories.first;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double responsivePadding = screenWidth * 0.05;
     return Scaffold(
-       resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.blue,
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Text('Add Expense',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+        title: Text(
+          'Add Expense',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(responsivePadding),
@@ -202,7 +204,8 @@ class _AddExpensePageState extends State<AddExpensePage> {
       final monthYear = DateFormat('MMMM-yyyy').format(_selectedDate);
       final dayMonthYear = DateFormat('dd-MMMM-yyyy').format(_selectedDate);
       final year = DateFormat('yyyy').format(_selectedDate);
-      final added_date = DateTime.now();
+      final added_date =
+          _selectedDate; // Use selected date instead of DateTime.now()
       _amountController.clear();
 
       // Add expense to expenses collection
@@ -217,7 +220,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Expense added successfully!'),
       ));
-      FocusScope.of(context).unfocus(); 
+      FocusScope.of(context).unfocus();
 
       // Update daily expenses
       await _updateDailyExpenses(dayMonthYear, amount);

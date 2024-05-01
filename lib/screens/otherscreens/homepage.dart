@@ -23,8 +23,7 @@ class _HomeState extends State<Home> {
     double screenWidth = MediaQuery.of(context).size.width;
     double responsivePadding = screenWidth * 0.05;
     return Scaffold(
-      
-      backgroundColor: Colors.blue,
+      backgroundColor: Color(0xffcaf0f8),
       appBar: AppBar(
           flexibleSpace: Center(
               child: Padding(
@@ -55,6 +54,7 @@ class _HomeState extends State<Home> {
             bottom: responsivePadding, // Adjust as needed
             right: responsivePadding, // Adjust as needed
             child: SpeedDial(
+              backgroundColor: Color.fromARGB(255, 98, 216, 237),
               activeIcon: Icons.close,
               icon: Icons.add,
               overlayOpacity: 0.1,
@@ -71,7 +71,7 @@ class _HomeState extends State<Home> {
                         ));
                   },
                 ),
-                 SpeedDialChild(
+                SpeedDialChild(
                   child: Icon(Icons.receipt),
                   label: 'Add expense',
                   onTap: () {
@@ -127,8 +127,9 @@ class _HomeState extends State<Home> {
                               child: Text(
                                 'Hello, $userName',
                                 style: TextStyle(
+                                    letterSpacing: 2,
                                     fontSize: 24,
-                                    color: Colors.white,
+                                    color: Colors.grey[700],
                                     fontWeight: FontWeight.bold),
                               ),
                             ),

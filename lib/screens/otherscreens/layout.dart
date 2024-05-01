@@ -6,20 +6,15 @@ import 'package:xpenso/screens/otherscreens/budget.dart';
 import 'package:xpenso/screens/otherscreens/homepage.dart';
 import 'package:xpenso/screens/otherscreens/records.dart';
 
-
-
 class Pagelayout extends StatefulWidget {
   const Pagelayout({super.key});
 
-  
   @override
   State<Pagelayout> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<Pagelayout> {
   @override
-
-
   int _currentIndex = 0;
 
   final _page1 = GlobalKey<NavigatorState>();
@@ -36,10 +31,7 @@ class _MyHomePageState extends State<Pagelayout> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-
       resizeToAvoidBottomInset: false,
-     
-       
       extendBody: true,
       body: IndexedStack(
         index: _currentIndex,
@@ -64,27 +56,22 @@ class _MyHomePageState extends State<Pagelayout> {
               settings: route,
               builder: (context) => Records(),
             ),
-            
           ),
-           Navigator(
+          Navigator(
             key: _page4,
             onGenerateRoute: (route) => MaterialPageRoute(
               settings: route,
               builder: (context) => Analysis(),
             ),
           ),
-     
         ],
-      
       ),
       bottomNavigationBar: CurvedNavigationBar(
-      
-        
         backgroundColor: Colors.transparent,
+        color: Color(0xff90e0ef),
         animationCurve: Easing.legacyAccelerate,
-        animationDuration: Duration(milliseconds: 500),
-        items:  const [
-          
+        animationDuration: Duration(milliseconds: 290),
+        items: const [
           CurvedNavigationBarItem(
             child: Icon(Icons.home_outlined),
             label: 'Home',
@@ -93,22 +80,17 @@ class _MyHomePageState extends State<Pagelayout> {
             child: Icon(Icons.money),
             label: 'Budget',
           ),
-          
           CurvedNavigationBarItem(
             child: Icon(Icons.receipt_long_sharp),
             label: 'Records',
           ),
-          
-           CurvedNavigationBarItem(
+          CurvedNavigationBarItem(
             child: Icon(Icons.analytics_outlined),
             label: 'Analysis',
           ),
         ],
         onTap: (index) {
-          if(index==4)
-          {
-            
-          }
+          if (index == 4) {}
           setState(() {
             _currentIndex = index;
           });
@@ -117,4 +99,3 @@ class _MyHomePageState extends State<Pagelayout> {
     );
   }
 }
-
