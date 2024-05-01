@@ -7,7 +7,7 @@ import 'package:xpenso/screens/authentication/welcomescreen.dart';
 import 'package:xpenso/screens/splash.dart';
 import 'package:xpenso/screens/streambuilder.dart';
 import 'package:flutter/services.dart';
-import 'package:xpenso/screens/test.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
