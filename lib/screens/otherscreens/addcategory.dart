@@ -9,24 +9,27 @@ class AddCategoryPage extends StatefulWidget {
 
 class _AddCategoryPageState extends State<AddCategoryPage> {
   final TextEditingController _categoryController = TextEditingController();
-  late String uid;
+  late String _uid='';
   late DocumentReference userRef;
 
 
   // Define the categories that should always be displayed
-  List<String> predefinedCategories = ['Food', 'Transportation', 'Enter', 'other', 'new', 'kk'];
+  List<String> predefinedCategories = ['Food', 'Transportation', 'Entertainment','Clothing','Education',];
 
   // Define icons for specific categories
   Map<String, IconData> categoryIcons = {
     'Food': Icons.fastfood,
     'Transportation': Icons.directions_car,
+    'Clothing':Icons.accessibility,
+    'Education':Icons.book_sharp,
+     'Entertainment': Icons.movie,
     // Add more category-icon mappings as needed
   };
   @override
   void initState() {
     super.initState();
-     final uid = FirebaseAuth.instance.currentUser?.uid;
-    userRef = FirebaseFirestore.instance.collection('User').doc(uid);
+    
+    _uid = FirebaseAuth.instance.currentUser!.uid; 
    
   }
 
@@ -34,10 +37,11 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
     String category = _categoryController.text.trim();
     if (category.isNotEmpty) {
       try {
-        await FirebaseFirestore.instance.collection('categories').add({
+        await FirebaseFirestore.instance.collection('User').doc(_uid).collection('categories').add({
           'category': category,
           // Add more fields if needed
         });
+        FocusScope.of(context).unfocus(); 
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Category added successfully!'),
         ));
@@ -59,7 +63,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
   Future<void> _deleteCategory(String categoryName) async {
     try {
       await FirebaseFirestore.instance
-          .collection('categories')
+          .collection('User').doc(_uid).collection('categories')
           .where('category', isEqualTo: categoryName)
           .get()
           .then((QuerySnapshot querySnapshot) {
@@ -90,7 +94,8 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
        
        resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('Add Category'),
+        title: Text('Add Category',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+        backgroundColor: Colors.blue,
       ),
       body: Padding(
         padding: EdgeInsets.all(responsivePadding1),
@@ -138,13 +143,13 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
             Expanded(
               child:
                
-                StreamBuilder(
-                stream: userRef.snapshots(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                StreamBuilder<QuerySnapshot>(
+                stream:FirebaseFirestore.instance.collection('User').doc(_uid).collection('categories').snapshots(),
+                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   }
-                    if (!snapshot.hasData || snapshot.data == null || snapshot.data!.docs.isEmpty) {
+                    if (!snapshot.hasData || snapshot.data == null ) {
             return Center(
              child: Container(),
             );
@@ -164,7 +169,7 @@ class _AddCategoryPageState extends State<AddCategoryPage> {
                         icon = Icons.category;
                       }
                       return Container(
-                        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                        decoration: BoxDecoration(color: Colors.white.withOpacity(0.8), borderRadius: BorderRadius.circular(10)),
                         height: 50, // Set a fixed height for all containers
                         margin: EdgeInsets.symmetric(vertical: responsivePadding2),
                         padding: EdgeInsets.all(8.0),

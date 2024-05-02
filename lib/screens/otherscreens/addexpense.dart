@@ -5,9 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class AddExpensePage extends StatefulWidget {
-  
-
- 
   @override
   _AddExpensePageState createState() => _AddExpensePageState();
 }
@@ -22,10 +19,9 @@ class _AddExpensePageState extends State<AddExpensePage> {
   List<String> _categories = [
     'Food',
     'Transportation',
-    'Enter',
-    'other',
-    'new',
-    'kk'
+    'Entertainment',
+    'Clothing',
+    'Education',
   ];
   Map<String, IconData> _categoryIcons = {
     'Food': Icons.fastfood, // Set custom icon for Food category
@@ -33,7 +29,8 @@ class _AddExpensePageState extends State<AddExpensePage> {
         Icons.directions_car, // Set custom icon for Transportation category
     // Default icons for other categories
     'Entertainment': Icons.movie,
-    'Other': Icons.category,
+    'Clothing': Icons.accessibility,
+    'Education': Icons.book_sharp,
   };
 
   @override
@@ -43,29 +40,33 @@ class _AddExpensePageState extends State<AddExpensePage> {
     userRef = FirebaseFirestore.instance.collection('User').doc(uid);
     _selectedCategory = _categories.first;
     _selectedDate = DateTime.now();
-      _fetchCategories();
+    _fetchCategories();
   }
- Future<void> _fetchCategories() async {
-  final categoriesSnapshot = await FirebaseFirestore.instance.collection('categories').get();
-  setState(() {
-    final fetchedCategories = categoriesSnapshot.docs.map((doc) => doc['category'] as String).toList();
-    _categories.addAll(fetchedCategories);
-    _selectedCategory = _categories.first;
-  });
-}
 
-
+  Future<void> _fetchCategories() async {
+    final categoriesSnapshot = await userRef.collection('categories').get();
+    setState(() {
+      final fetchedCategories = categoriesSnapshot.docs
+          .map((doc) => doc['category'] as String)
+          .toList();
+      _categories.addAll(fetchedCategories);
+      _selectedCategory = _categories.first;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double responsivePadding = screenWidth * 0.05;
     return Scaffold(
-       resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.blue,
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: Text('Add Expense',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+        title: Text(
+          'Add Expense',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(responsivePadding),
@@ -217,15 +218,14 @@ class _AddExpensePageState extends State<AddExpensePage> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Expense added successfully!'),
       ));
-      FocusScope.of(context).unfocus(); 
+      FocusScope.of(context).unfocus();
 
       // Update daily expenses
-      await _updateDailyExpenses(dayMonthYear, amount);
+     
 
       //monthlyexpenses
       await _updateMonthlyExpenses(monthYear, amount);
-      await _updateYearlyExpenses(year, amount);
-      await _updateCategoryMonthlyExpenses(monthYear, amount);
+      
 
       // Update budget info and category-specific budget info
       await _updateBudgetInfo(monthYear, amount);
@@ -341,71 +341,20 @@ class _AddExpensePageState extends State<AddExpensePage> {
       final docSnapshot = await transaction.get(monthDoc);
       if (docSnapshot.exists) {
         // Update existing month document
-        final currentAmount = docSnapshot['amount'] as int;
-        transaction.update(monthDoc, {'amount': currentAmount + expenseAmount});
+        final currentAmount = docSnapshot['totalAmount'] as int;
+        transaction.update(monthDoc, {
+          'monthYear': monthYear,
+          'totalAmount': currentAmount + expenseAmount
+        });
       } else {
         // Create new month document if it doesn't exist
-        transaction.set(monthDoc, {'amount': expenseAmount});
+        transaction.set(
+            monthDoc, {'monthYear': monthYear, 'totalAmount': expenseAmount});
       }
     });
   }
 
-  Future<void> _updateDailyExpenses(
-      String dayMonthYear, int expenseAmount) async {
-    final dailyExpensesRef = userRef.collection('DailyExpenses');
-    final dayDoc = dailyExpensesRef.doc(dayMonthYear);
-
-    // Use a transaction to update the amount atomically
-    await FirebaseFirestore.instance.runTransaction((transaction) async {
-      final docSnapshot = await transaction.get(dayDoc);
-      if (docSnapshot.exists) {
-        // Update existing day document
-        final currentAmount = docSnapshot['amount'] as int;
-        transaction.update(dayDoc, {'amount': currentAmount + expenseAmount});
-      } else {
-        // Create new day document if it doesn't exist
-        transaction.set(dayDoc, {'amount': expenseAmount});
-      }
-    });
-  }
-
-  Future<void> _updateYearlyExpenses(String year, int expenseAmount) async {
-    final yearlyExpensesRef = userRef.collection('YearlyExpenses');
-    final yearDoc = yearlyExpensesRef.doc(year);
-
-    // Use a transaction to update the amount atomically
-    await FirebaseFirestore.instance.runTransaction((transaction) async {
-      final docSnapshot = await transaction.get(yearDoc);
-      if (docSnapshot.exists) {
-        // Update existing year document
-        final currentAmount = docSnapshot['amount'] as int;
-        transaction.update(yearDoc, {'amount': currentAmount + expenseAmount});
-      } else {
-        // Create new year document if it doesn't exist
-        transaction.set(yearDoc, {'amount': expenseAmount});
-      }
-    });
-  }
-
-  Future<void> _updateCategoryMonthlyExpenses(
-      String monthYear, int expenseAmount) async {
-    final categoryMonthlyExpensesRef =
-        userRef.collection('${_selectedCategory}month');
-    final monthDoc = categoryMonthlyExpensesRef.doc(monthYear);
-
-    // Use a transaction to update the amount atomically
-    await FirebaseFirestore.instance.runTransaction((transaction) async {
-      final docSnapshot = await transaction.get(monthDoc);
-      if (docSnapshot.exists) {
-        // Update existing month document
-        final currentAmount = docSnapshot['amount'] as int;
-        transaction.update(monthDoc, {'amount': currentAmount + expenseAmount});
-      } else {
-        // Create new month document if it doesn't exist
-        transaction.set(monthDoc, {'amount': expenseAmount});
-      }
-    });
-  }
+  
 
   void _showBudgetExceededAlert() {
     showDialog(

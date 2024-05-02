@@ -3,7 +3,11 @@ import 'package:curved_labeled_navigation_bar/curved_navigation_bar_item.dart';
 import 'package:flutter/material.dart';
 import 'package:xpenso/screens/otherscreens/analysis.dart';
 import 'package:xpenso/screens/otherscreens/budget.dart';
+import 'package:xpenso/screens/otherscreens/categorywisebudget.dart';
+
+import 'package:xpenso/screens/otherscreens/expenselistmonth.dart';
 import 'package:xpenso/screens/otherscreens/homepage.dart';
+import 'package:xpenso/screens/otherscreens/totalbudget.dart';
 import 'package:xpenso/screens/otherscreens/records.dart';
 
 
@@ -62,7 +66,7 @@ class _MyHomePageState extends State<Pagelayout> {
             key: _page3,
             onGenerateRoute: (route) => MaterialPageRoute(
               settings: route,
-              builder: (context) => Records(),
+              builder: (context) => ExpenseListPage(),
             ),
             
           ),
