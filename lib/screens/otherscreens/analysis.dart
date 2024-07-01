@@ -83,20 +83,9 @@ class _AnalysisState extends State<Analysis> {
 @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: Center(
-          child: Padding(
-            padding: const EdgeInsets.only(top: 30),
-            child: SizedBox(
-              height: 120,
-              child: Image.asset(
-                'assets/images/appbarlogo.png',
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ),
-        backgroundColor: Colors.blue,
+      backgroundColor: Color.fromARGB(255, 165, 240, 160),
+      appBar: AppBar(backgroundColor:  Color.fromARGB(255, 161, 227, 156),
+        title: Text('Expense Analysis',style: TextStyle(fontWeight: FontWeight.bold),),
       ),
       body: ListView(
         children:[ Column(
@@ -104,14 +93,7 @@ class _AnalysisState extends State<Analysis> {
           children: [
             const Padding(
               padding: EdgeInsets.all(8.0),
-              child: Text(
-                'Expense Analysis',
-                textAlign: TextAlign.center,
-                style: TextStyle( fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  letterSpacing: 2,
-                ),
-              ),
+              
             ),
             SizedBox(
               height: 10,

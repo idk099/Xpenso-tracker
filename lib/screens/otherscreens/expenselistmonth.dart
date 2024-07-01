@@ -145,7 +145,7 @@ class _ExpenseListPageState extends State<ExpenseListPage> {
                 ),
                 _buildFilterButton(),
                 SizedBox(
-                  width: 10,
+                  width: 5,
                 ),
                 IconButton(
                   icon: Icon(_sortByNewestFirst

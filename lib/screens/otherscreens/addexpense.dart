@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:intl/intl.dart';
+import 'package:xpenso/screens/otherscreens/categoryexpensecalculate.dart';
 
 class AddExpensePage extends StatefulWidget {
   @override
@@ -156,16 +157,16 @@ class _AddExpensePageState extends State<AddExpensePage> {
                       style: TextStyle(fontSize: 16.0),
                     ),
                     Spacer(),
-                    TextButton(
-                      onPressed: () => _selectDate(context),
-                      child: Text(
-                        'Change Date',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
                   ],
                 ),
-                SizedBox(height: 20.0),
+                SizedBox(height: 10.0),
+                TextButton(
+                  onPressed: () => _selectDate(context),
+                  child: Text(
+                    'Change Date',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
                 ElevatedButton(
                   style:
                       ElevatedButton.styleFrom(backgroundColor: Colors.black),
@@ -221,11 +222,12 @@ class _AddExpensePageState extends State<AddExpensePage> {
       FocusScope.of(context).unfocus();
 
       // Update daily expenses
-     
+
+      ClassName className = ClassName();
+      className.calculateAndStoreCategoryExpenses();
 
       //monthlyexpenses
       await _updateMonthlyExpenses(monthYear, amount);
-      
 
       // Update budget info and category-specific budget info
       await _updateBudgetInfo(monthYear, amount);
@@ -353,8 +355,6 @@ class _AddExpensePageState extends State<AddExpensePage> {
       }
     });
   }
-
-  
 
   void _showBudgetExceededAlert() {
     showDialog(

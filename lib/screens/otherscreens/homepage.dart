@@ -1,9 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:xpenso/screens/otherscreens/addcategory.dart';
 import 'package:xpenso/screens/otherscreens/addexpense.dart';
+import 'package:xpenso/screens/otherscreens/homedata.dart';
 import 'package:xpenso/services/authenticate.dart';
 import 'package:intl/intl.dart';
 
@@ -30,6 +34,7 @@ class _HomeState extends State<Home> {
     double responsivePadding = screenWidth * 0.05;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.blue,
       appBar: AppBar(
         flexibleSpace: Center(
@@ -62,6 +67,459 @@ class _HomeState extends State<Home> {
       body: SafeArea(
         child: Stack(
           children: [
+            ListView(children: [
+              Container(
+                height: 50000,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          height: 78,
+                          child: StreamBuilder<DocumentSnapshot>(
+                            stream: userRef.snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                      ConnectionState.waiting ||
+                                  snapshot.hasError ||
+                                  !snapshot.hasData ||
+                                  !snapshot.data!.exists) {
+                                return SizedBox(
+                                  height: 30,
+                                );
+                              }
+
+                              final userName = snapshot.data!['Name'];
+
+                              return Center(
+                                child: Padding(
+                                  padding: EdgeInsets.all(responsivePadding),
+                                  child: SizedBox(
+                                    height: 40,
+                                    child: Text(
+                                      'Hello, $userName',
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 2,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      'This month ${DateFormat('MMMM-yyyy').format(DateTime.now())}',
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: responsivePadding),
+                      child: Expanded(
+                        child: Container(
+                          height: 120,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                          ),
+                          child: Center(
+                            child: StreamBuilder<DocumentSnapshot>(
+                              stream: monthlyExpensesRef.snapshots(),
+                              builder: (context, snapshot) {
+                                // Handling loading state
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.trending_down,
+                                              size: 30,
+                                              color: Colors.green,
+                                            ),
+                                            Text(
+                                              ' Expense',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          '₹ 0',
+                                          style: TextStyle(
+                                            fontSize: 19,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+
+                                // Handling case where no data or collection does not exist
+                                if (!snapshot.hasData ||
+                                    !snapshot.data!.exists) {
+                                  return Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.trending_down,
+                                              size: 30,
+                                              color: Colors.red,
+                                            ),
+                                            Text(
+                                              ' Expense',
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          '₹ 0',
+                                          style: TextStyle(
+                                            fontSize: 19,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+
+                                final totalExpense =
+                                    snapshot.data!['totalAmount'];
+
+                                return Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.trending_down,
+                                            size: 30,
+                                            color: Colors.red,
+                                          ),
+                                          Text(
+                                            ' Expense',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        '₹ $totalExpense',
+                                        style: TextStyle(
+                                          fontSize: 19,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('User')
+                            .doc(uid)
+                            .collection('expenses')
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return  Container();
+                          }
+
+                          if (snapshot.hasError) {
+                            return Container();
+                          }
+
+                          // Check if the expenses collection exists and is not empty
+                          if (!snapshot.hasData ||
+                              snapshot.data!.docs.isEmpty) {
+                            return  Container(); // Return an empty container if the collection does not exist or is empty
+                          }
+
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: responsivePadding),
+                            child: Container(
+                              height: 100,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: categorymonthly(),
+                              ),
+                            ),
+                          );
+                        }),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: responsivePadding),
+                      child: Container(
+                        child: StreamBuilder(
+                          stream: FirebaseFirestore.instance
+                              .collection('User')
+                              .doc(FirebaseAuth.instance.currentUser!.uid)
+                              .collection('budgets')
+                              .doc(_getCurrentMonthYear())
+                              .snapshots(),
+                          builder: (context, budgetSnapshot) {
+                            if (!budgetSnapshot.hasData ||
+                                budgetSnapshot.data == null) {
+                              return Container(); // Return empty container if budget collection does not exist
+                            }
+                            var budgetData = budgetSnapshot.data;
+                            double totalBudget =
+                                (budgetData!['totalBudget'] ?? 0).toDouble();
+
+                            return StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection('User')
+                                  .doc(FirebaseAuth.instance.currentUser!.uid)
+                                  .collection('MonthlyExpenses')
+                                  .doc(_getCurrentMonthYear())
+                                  .snapshots(),
+                              builder: (context, expenseSnapshot) {
+                                if (!expenseSnapshot.hasData ||
+                                    expenseSnapshot.data == null ||
+                                    !expenseSnapshot.data!.exists) {
+                                  return Container(); // Return empty container if monthly expenses collection does not exist
+                                }
+                                var expenseData = expenseSnapshot.data;
+                                double totalExpenses =
+                                    (expenseData!['totalAmount'] ?? 0)
+                                        .toDouble();
+
+                                double exceededAmount =
+                                    totalExpenses - totalBudget;
+                                bool isBudgetExceeded = exceededAmount > 0;
+                                double remainingAmount =
+                                    totalBudget - totalExpenses;
+
+                                // Calculate progress percentage
+                                double progress = (totalExpenses / totalBudget)
+                                    .clamp(0.0, 1.0);
+
+                                return Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.blue,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 10),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              'Monthly Budget',
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      if (isBudgetExceeded)
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Container(
+                                            padding: EdgeInsets.all(16),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.red.withOpacity(0.3),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  'Exceeded by ₹ ${exceededAmount.toStringAsFixed(2)}',
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Colors.red,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      '${totalExpenses.toStringAsFixed(2)} / ${totalBudget.toStringAsFixed(2)}',
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.grey[800],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(height: 10),
+                                                LinearProgressIndicator(
+                                                  minHeight: 20,
+                                                  value: progress,
+                                                  backgroundColor:
+                                                      Colors.grey[300],
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(
+                                                    Colors.red,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      if (!isBudgetExceeded)
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Container(
+                                            padding: EdgeInsets.all(16),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.green.withOpacity(0.3),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                Align(
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                    'Remaining ₹ ${remainingAmount.toStringAsFixed(2)}',
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                      color: Colors.green,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      '${totalExpenses.toStringAsFixed(2)} / ${totalBudget.toStringAsFixed(2)}',
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.grey[800],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(height: 10),
+                                                LinearProgressIndicator(
+                                                  minHeight: 20,
+                                                  value: progress,
+                                                  backgroundColor:
+                                                      Colors.grey[300],
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(
+                                                    Colors.green,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    Row(
+    
+                      children: [Padding(
+                        padding:  EdgeInsets.symmetric(horizontal: responsivePadding),
+                        child: Text('Budgeted categoreies',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+                      )],),
+                    categorylist()
+                  ],
+                ),
+              ),
+            ]),
             Positioned(
               bottom: responsivePadding,
               right: responsivePadding,
@@ -99,155 +557,15 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 78,
-                      child: StreamBuilder<DocumentSnapshot>(
-                        stream: userRef.snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                                  ConnectionState.waiting ||
-                              snapshot.hasError ||
-                              !snapshot.hasData ||
-                              !snapshot.data!.exists) {
-                            return SizedBox(
-                              height: 30,
-                            );
-                          }
-
-                          final userName = snapshot.data!['Name'];
-
-                          return Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(responsivePadding),
-                              child: SizedBox(
-                                height: 30,
-                                child: Text(
-                                  'Hello, $userName',
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: responsivePadding),
-                  child: Container(
-                    height: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                    ),
-                    child: Center(
-                      child: StreamBuilder<DocumentSnapshot>(
-                        stream: monthlyExpensesRef.snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return SizedBox(
-                              width: 150,
-                              height: 150,
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.blue),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.account_balance_wallet,
-                                        size: 60,
-                                        color: Colors.blue,
-                                      ),
-                                      SizedBox(height: 10),
-                                      Text(
-                                        'Expense',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.blue,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-
-                          if (!snapshot.hasData || !snapshot.data!.exists) {
-                            return Center(
-                              child: Text(
-                                'No data available',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            );
-                          }
-
-                          final totalExpense = snapshot.data!['totalAmount'];
-
-                          return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.account_balance_wallet,
-                                  size: 60,
-                                  color: Colors.blue,
-                                ),
-                                SizedBox(height: 10),
-                                Text(
-                                  'Expense',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                                SizedBox(height: 5),
-                                Text(
-                                  '₹ $totalExpense',
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),
     );
+  }
+
+  String _getCurrentMonthYear() {
+    DateTime now = DateTime.now();
+    return '${DateFormat('MMMM-yyyy').format(now)}';
   }
 
   Future<void> signOutDialog() async {
@@ -274,4 +592,100 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+}
+
+Widget categorymonthly() {
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+  return StreamBuilder(
+    stream: FirebaseFirestore.instance
+        .collection('User')
+        .doc(uid)
+        .collection('expenses')
+        .snapshots(),
+    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(child: CircularProgressIndicator());
+      }
+
+      if (snapshot.hasError) {
+        return Center(child: Text('Error: ${snapshot.error}'));
+      }
+
+      // Check if the expenses collection exists and is not empty
+      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+        return SizedBox(); // Return an empty container if the collection does not exist or is empty
+      }
+
+      // Create a set to store unique categories
+      Set<String> categorySet = {};
+
+      // Add categories from documents to the set
+      snapshot.data!.docs.forEach((doc) {
+        String category = doc['category'];
+        categorySet.add(category);
+      });
+
+      // Convert set to list for easier usage
+      List<String> categoryList = categorySet.toList();
+
+      return ListView.builder(
+        itemCount: categoryList.length,
+        itemBuilder: (context, index) {
+          String category = categoryList[index];
+
+          return ExpenseTile(
+            category: category,
+            uid: uid,
+          );
+        },
+      );
+    },
+  );
+}
+
+Widget categorylist() {
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+  return StreamBuilder(
+    stream: FirebaseFirestore.instance
+        .collection('User')
+        .doc(uid)
+        .collection('expenses')
+        .snapshots(),
+    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return  Container();
+      }
+
+      if (snapshot.hasError) {
+        return Center(child: Text('Error: ${snapshot.error}'));
+      }
+
+      // Check if the expenses collection exists and is not empty
+      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+        return  Container(); // Return an empty container if the collection does not exist or is empty
+      }
+
+      Set<String> categorySet = {};
+      String currentMonthYear = DateFormat('MMMM-yyyy').format(DateTime.now());
+
+      snapshot.data!.docs.forEach((doc) {
+        String category = doc['category'];
+        categorySet.add(category);
+      });
+
+      return Container(
+        height: 450,
+        child: ListView.builder(
+          itemCount: categorySet.length,
+          itemBuilder: (context, index) {
+            String category = categorySet.elementAt(index);
+            return CategoryTile(
+              category: category,
+              currentMonthYear: currentMonthYear,
+            );
+          },
+        ),
+      );
+    },
+  );
 }

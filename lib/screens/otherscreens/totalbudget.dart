@@ -75,7 +75,7 @@ class _BudgetSettingPageState extends State<BudgetSettingPage> {
       style: TextStyle(
         color: Colors.black,
         fontWeight: FontWeight.bold,
-        fontSize: 20.0,
+        fontSize: 18.0,
       ),
     ),
     trailing: _budgetExists
@@ -455,28 +455,5 @@ else if (snapshot.hasError) {
     );
   }
 
-  Future<List<Map<String, dynamic>>> _fetchPreviousMonthBudgets() async {
-    final List<Map<String, dynamic>> previousMonthBudgets = [];
-    final now = DateTime.now();
-    final currentMonth = now.month;
-    final currentYear = now.year;
-
-    for (int i = 1; i < currentMonth; i++) {
-      final String month = DateFormat('MMMM').format(DateTime(currentYear, i));
-      final budgetRef = FirebaseFirestore.instance
-          .collection('User')
-          .doc(_uid)
-          .collection('budgets');
-      final docSnapshot = await budgetRef.doc('$month-$currentYear').get();
-
-      if (docSnapshot.exists) {
-        previousMonthBudgets.add({
-          'month': month,
-          'totalBudget': docSnapshot.data()?['totalBudget'],
-        });
-      }
-    }
-
-    return previousMonthBudgets;
-  }
+ 
 }
