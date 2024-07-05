@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:intl/intl.dart';
-import 'package:xpenso/screens/otherscreens/categoryexpensecalculate.dart';
+
 
 class AddExpensePage extends StatefulWidget {
   @override
@@ -223,8 +223,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
 
       // Update daily expenses
 
-      ClassName className = ClassName();
-      className.calculateAndStoreCategoryExpenses();
+     
 
       //monthlyexpenses
       await _updateMonthlyExpenses(monthYear, amount);

@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:xpenso/screens/otherscreens/addcategory.dart';
 import 'package:xpenso/screens/otherscreens/addexpense.dart';
-import 'package:xpenso/screens/otherscreens/homedata.dart';
+
 import 'package:xpenso/services/authenticate.dart';
 import 'package:intl/intl.dart';
 
@@ -270,43 +270,7 @@ class _HomeState extends State<Home> {
                     SizedBox(
                       height: 20,
                     ),
-                    StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection('User')
-                            .doc(uid)
-                            .collection('expenses')
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return  Container();
-                          }
-
-                          if (snapshot.hasError) {
-                            return Container();
-                          }
-
-                          // Check if the expenses collection exists and is not empty
-                          if (!snapshot.hasData ||
-                              snapshot.data!.docs.isEmpty) {
-                            return  Container(); // Return an empty container if the collection does not exist or is empty
-                          }
-
-                          return Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: responsivePadding),
-                            child: Container(
-                              height: 100,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: categorymonthly(),
-                              ),
-                            ),
-                          );
-                        }),
+                  
                     SizedBox(
                       height: 20,
                     ),
@@ -327,195 +291,202 @@ class _HomeState extends State<Home> {
                               return Container(); // Return empty container if budget collection does not exist
                             }
                             var budgetData = budgetSnapshot.data;
-                            double totalBudget =
-                                (budgetData!['totalBudget'] ?? 0).toDouble();
+                            if (budgetData!.exists) {
+                              double totalBudget =
+                                  (budgetData!['totalBudget'] ?? 0).toDouble();
 
-                            return StreamBuilder(
-                              stream: FirebaseFirestore.instance
-                                  .collection('User')
-                                  .doc(FirebaseAuth.instance.currentUser!.uid)
-                                  .collection('MonthlyExpenses')
-                                  .doc(_getCurrentMonthYear())
-                                  .snapshots(),
-                              builder: (context, expenseSnapshot) {
-                                if (!expenseSnapshot.hasData ||
-                                    expenseSnapshot.data == null ||
-                                    !expenseSnapshot.data!.exists) {
-                                  return Container(); // Return empty container if monthly expenses collection does not exist
-                                }
-                                var expenseData = expenseSnapshot.data;
-                                double totalExpenses =
-                                    (expenseData!['totalAmount'] ?? 0)
-                                        .toDouble();
+                              return StreamBuilder(
+                                stream: FirebaseFirestore.instance
+                                    .collection('User')
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .collection('MonthlyExpenses')
+                                    .doc(_getCurrentMonthYear())
+                                    .snapshots(),
+                                builder: (context, expenseSnapshot) {
+                                  if (!expenseSnapshot.hasData ||
+                                      expenseSnapshot.data == null ||
+                                      !expenseSnapshot.data!.exists) {
+                                    return Container(); // Return empty container if monthly expenses collection does not exist
+                                  }
+                                  var expenseData = expenseSnapshot.data;
+                                  double totalExpenses =
+                                      (expenseData!['totalAmount'] ?? 0)
+                                          .toDouble();
 
-                                double exceededAmount =
-                                    totalExpenses - totalBudget;
-                                bool isBudgetExceeded = exceededAmount > 0;
-                                double remainingAmount =
-                                    totalBudget - totalExpenses;
+                                  double exceededAmount =
+                                      totalExpenses - totalBudget;
+                                  bool isBudgetExceeded = exceededAmount > 0;
+                                  double remainingAmount =
+                                      totalBudget - totalExpenses;
 
-                                // Calculate progress percentage
-                                double progress = (totalExpenses / totalBudget)
-                                    .clamp(0.0, 1.0);
+                                  // Calculate progress percentage
+                                  double progress =
+                                      (totalExpenses / totalBudget)
+                                          .clamp(0.0, 1.0);
 
-                                return Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.blue,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 10),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              'Monthly Budget',
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      if (isBudgetExceeded)
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.blue,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
                                         Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Container(
-                                            padding: EdgeInsets.all(16),
-                                            decoration: BoxDecoration(
-                                              color:
-                                                  Colors.red.withOpacity(0.3),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  'Exceeded by ₹ ${exceededAmount.toStringAsFixed(2)}',
-                                                  style: TextStyle(
-                                                    fontSize: 20,
-                                                    color: Colors.red,
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                'Monthly Budget',
+                                                style: TextStyle(
+                                                    fontSize: 18,
                                                     fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 10),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      '${totalExpenses.toStringAsFixed(2)} / ${totalBudget.toStringAsFixed(2)}',
-                                                      style: TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.grey[800],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(height: 10),
-                                                LinearProgressIndicator(
-                                                  minHeight: 20,
-                                                  value: progress,
-                                                  backgroundColor:
-                                                      Colors.grey[300],
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation<
-                                                          Color>(
-                                                    Colors.red,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                                    color: Colors.white),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      if (!isBudgetExceeded)
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Container(
-                                            padding: EdgeInsets.all(16),
+                                        if (isBudgetExceeded)
+                                          Container(
                                             decoration: BoxDecoration(
-                                              color:
-                                                  Colors.green.withOpacity(0.3),
+                                              color: Colors.white,
                                               borderRadius:
                                                   BorderRadius.circular(10),
                                             ),
-                                            child: Column(
-                                              children: [
-                                                Align(
-                                                  alignment: Alignment.center,
-                                                  child: Text(
-                                                    'Remaining ₹ ${remainingAmount.toStringAsFixed(2)}',
+                                            child: Container(
+                                              padding: EdgeInsets.all(16),
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    Colors.red.withOpacity(0.3),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  Text(
+                                                    'Exceeded by ₹ ${exceededAmount.toStringAsFixed(2)}',
                                                     style: TextStyle(
                                                       fontSize: 20,
-                                                      color: Colors.green,
+                                                      color: Colors.red,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
                                                   ),
-                                                ),
-                                                SizedBox(height: 10),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      '${totalExpenses.toStringAsFixed(2)} / ${totalBudget.toStringAsFixed(2)}',
-                                                      style: TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.grey[800],
+                                                  SizedBox(height: 10),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        '${totalExpenses.toStringAsFixed(2)} / ${totalBudget.toStringAsFixed(2)}',
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color:
+                                                              Colors.grey[800],
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(height: 10),
-                                                LinearProgressIndicator(
-                                                  minHeight: 20,
-                                                  value: progress,
-                                                  backgroundColor:
-                                                      Colors.grey[300],
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation<
-                                                          Color>(
-                                                    Colors.green,
+                                                    ],
                                                   ),
-                                                ),
-                                              ],
+                                                  SizedBox(height: 10),
+                                                  LinearProgressIndicator(
+                                                    minHeight: 20,
+                                                    value: progress,
+                                                    backgroundColor:
+                                                        Colors.grey[300],
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation<
+                                                            Color>(
+                                                      Colors.red,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            );
+                                        if (!isBudgetExceeded)
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Container(
+                                              padding: EdgeInsets.all(16),
+                                              decoration: BoxDecoration(
+                                                color: Colors.green
+                                                    .withOpacity(0.3),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  Align(
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      'Remaining ₹ ${remainingAmount.toStringAsFixed(2)}',
+                                                      style: TextStyle(
+                                                        fontSize: 20,
+                                                        color: Colors.green,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 10),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        '${totalExpenses.toStringAsFixed(2)} / ${totalBudget.toStringAsFixed(2)}',
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color:
+                                                              Colors.grey[800],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(height: 10),
+                                                  LinearProgressIndicator(
+                                                    minHeight: 20,
+                                                    value: progress,
+                                                    backgroundColor:
+                                                        Colors.grey[300],
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation<
+                                                            Color>(
+                                                      Colors.green,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              return Container();
+                            }
                           },
                         ),
                       ),
                     ),
-                    SizedBox(height: 20,),
-                    Row(
-    
-                      children: [Padding(
-                        padding:  EdgeInsets.symmetric(horizontal: responsivePadding),
-                        child: Text('Budgeted categoreies',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
-                      )],),
-                    categorylist()
+                    SizedBox(
+                      height: 20,
+                    ),
+                  
                   ],
                 ),
               ),
@@ -594,98 +565,3 @@ class _HomeState extends State<Home> {
   }
 }
 
-Widget categorymonthly() {
-  final uid = FirebaseAuth.instance.currentUser!.uid;
-  return StreamBuilder(
-    stream: FirebaseFirestore.instance
-        .collection('User')
-        .doc(uid)
-        .collection('expenses')
-        .snapshots(),
-    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Center(child: CircularProgressIndicator());
-      }
-
-      if (snapshot.hasError) {
-        return Center(child: Text('Error: ${snapshot.error}'));
-      }
-
-      // Check if the expenses collection exists and is not empty
-      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-        return SizedBox(); // Return an empty container if the collection does not exist or is empty
-      }
-
-      // Create a set to store unique categories
-      Set<String> categorySet = {};
-
-      // Add categories from documents to the set
-      snapshot.data!.docs.forEach((doc) {
-        String category = doc['category'];
-        categorySet.add(category);
-      });
-
-      // Convert set to list for easier usage
-      List<String> categoryList = categorySet.toList();
-
-      return ListView.builder(
-        itemCount: categoryList.length,
-        itemBuilder: (context, index) {
-          String category = categoryList[index];
-
-          return ExpenseTile(
-            category: category,
-            uid: uid,
-          );
-        },
-      );
-    },
-  );
-}
-
-Widget categorylist() {
-  final uid = FirebaseAuth.instance.currentUser!.uid;
-  return StreamBuilder(
-    stream: FirebaseFirestore.instance
-        .collection('User')
-        .doc(uid)
-        .collection('expenses')
-        .snapshots(),
-    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return  Container();
-      }
-
-      if (snapshot.hasError) {
-        return Center(child: Text('Error: ${snapshot.error}'));
-      }
-
-      // Check if the expenses collection exists and is not empty
-      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-        return  Container(); // Return an empty container if the collection does not exist or is empty
-      }
-
-      Set<String> categorySet = {};
-      String currentMonthYear = DateFormat('MMMM-yyyy').format(DateTime.now());
-
-      snapshot.data!.docs.forEach((doc) {
-        String category = doc['category'];
-        categorySet.add(category);
-      });
-
-      return Container(
-        height: 450,
-        child: ListView.builder(
-          itemCount: categorySet.length,
-          itemBuilder: (context, index) {
-            String category = categorySet.elementAt(index);
-            return CategoryTile(
-              category: category,
-              currentMonthYear: currentMonthYear,
-            );
-          },
-        ),
-      );
-    },
-  );
-}
