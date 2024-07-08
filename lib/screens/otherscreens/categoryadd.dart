@@ -56,6 +56,7 @@ class CategoryScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 60),
+           _addCategoryButton(context)
         
         ],
       ),
