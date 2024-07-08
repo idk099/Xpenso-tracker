@@ -70,13 +70,7 @@ class _TxnAccountState extends State<TxnAccount>
               ))
         ],
       ),
-       floatingActionButton: FloatingActionButton(onPressed: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => AddPage(),
-            ));
-      }),
+      
     
       body: SafeArea(
         child: Column(
