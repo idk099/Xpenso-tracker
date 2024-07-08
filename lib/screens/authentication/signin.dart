@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:xpenso/screens/authentication/signup.dart';
-import 'package:xpenso/screens/forgotpassword.dart';
+import 'package:xpenso/screens/authentication/forgotpassword.dart';
 import 'package:xpenso/services/authenticate.dart';
 
 class Signin extends StatefulWidget {

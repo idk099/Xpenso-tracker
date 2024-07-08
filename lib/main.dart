@@ -1,52 +1,90 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
+import 'package:provider/provider.dart';
+import 'package:xpenso/Data/defaulttxnaccountdata.dart';
+import 'package:xpenso/Models/accountmodel.dart';
+import 'package:xpenso/Models/budgetmodel.dart';
+import 'package:xpenso/Models/categorymodel.dart';
+
+import 'package:xpenso/Models/transactionmodel.dart';
 import 'package:xpenso/firebase_options.dart';
-import 'package:xpenso/screens/authentication/welcomescreen.dart';
+import 'package:xpenso/notification/budgetnotification.dart';
+
+import 'package:xpenso/screens/otherscreens/budgets.dart';
+import 'package:xpenso/screens/otherscreens/homescreen.dart';
+
+import 'package:xpenso/screens/otherscreens/transactionrecord.dart';
+
+
+
 import 'package:xpenso/screens/splash.dart';
-import 'package:xpenso/screens/streambuilder.dart';
 import 'package:flutter/services.dart';
+import 'package:xpenso/services/Provider/categoryservices.dart';
+import 'package:xpenso/services/Provider/transactionservices.dart';
+import 'package:xpenso/services/Provider/themePreference.dart';
+import 'package:xpenso/Data/themes.dart';
+import 'package:xpenso/widgets/layout/mainscreenlayout.dart';
+import 'package:xpenso/widgets/layout/mainscreenpageslayout.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Hive.initFlutter();
   
+
+  // Register Hive adapters
+
+  Hive.registerAdapter(CategoryAdapter());
+
+  Hive.registerAdapter(TransactionAdapter());
+  Hive.registerAdapter(AccountsAdapter());
+
+  // Open Hive boxes
+ Hive.registerAdapter(BudgetAdapter());
+ await Hive.openBox<Budget>('budgets');
+
+  await Hive.openBox<Category>('categories');
   
-  runApp(const MyApp());
+  await Hive.openBox<Transaction>('transactions');
+  await Hive.openBox<Accounts>('Accounts');
+  await Hive.openBox('themeBox');
+
+
+  await addTxnAccount();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CategoryService()),
+        ChangeNotifierProvider(create: (context) => TransactionServices()),
+         ChangeNotifierProvider(create: (context) => ThemeProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home:  Splash(),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',
+          themeMode: ThemeMode.system,
+          theme: ThemeClass.lightTheme,
+          darkTheme: ThemeClass.darkTheme,
+          home: Splash()
+        );
+      },
     );
   }
 }

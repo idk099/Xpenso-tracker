@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:xpenso/screens/streambuilder.dart';
+import 'package:xpenso/services/other/streambuilder.dart';
+import 'package:xpenso/widgets/layout/mainscreenpageslayout.dart';
 
 
 
@@ -27,7 +28,7 @@ class _SplashState extends State<Splash> {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const Start()
+            builder: (context) => const MainScreenPagesLayout()
           ));
     });
     Timer(Duration(seconds: 3), () {
@@ -47,7 +48,7 @@ class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF5CE1E6),
+      backgroundColor:Theme.of(context).brightness==Brightness.light? Color(0xFF5CE1E6):Colors.black,
       body: SafeArea(
         child: Center(
           child: Column(
