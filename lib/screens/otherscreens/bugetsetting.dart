@@ -147,13 +147,7 @@ class _BudgetSettingPageState extends State<BudgetSettingPage> {
     final currentBudget = transactionServices.getCurrentMonthBudget();
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TransactionRecord(),
-            )),
-      ),
+      
       
       body: SafeArea(
         child: Padding(
