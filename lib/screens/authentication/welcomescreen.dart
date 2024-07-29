@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:xpenso/screens/authentication/signup.dart';
 import 'package:xpenso/screens/authentication/signin.dart';
+import 'package:xpenso/services/Provider/transactionservices.dart';
 
 import 'package:xpenso/services/authenticate.dart';
 
@@ -13,15 +14,14 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> {
-
- 
   Image? background;
   final Authenticate _auth = Authenticate();
-   bool _loading = false;
+  bool _loading = false;
   @override
   void initState() {
     super.initState();
     background = Image.asset('assets/images/3.jpg');
+   
   }
 
   @override
@@ -69,30 +69,32 @@ class _WelcomeState extends State<Welcome> {
                           backgroundColor: Colors.white,
                         ),
                         onPressed: _submit,
-                        child:  Padding(
+                        child: Padding(
                           padding: EdgeInsets.all(8.0),
-                          child: _loading?SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: CircularProgressIndicator(
-                                          color: Colors.blue),
-                                    ):const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image(
-                                image:
-                                    AssetImage('assets/images/google_logo.png'),
-                                height: 35,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                "CONTINUE WITH GOOGLE",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
-                              ),
-                            ],
-                          ),
+                          child: _loading
+                              ? SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                      color: Colors.blue),
+                                )
+                              : const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image(
+                                      image: AssetImage(
+                                          'assets/images/google_logo.png'),
+                                      height: 35,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      "CONTINUE WITH GOOGLE",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black),
+                                    ),
+                                  ],
+                                ),
                         ),
                       ),
                     ),
@@ -155,7 +157,6 @@ class _WelcomeState extends State<Welcome> {
   }
 
   void _submit() async {
-    
     setState(() {
       _loading = true;
     });

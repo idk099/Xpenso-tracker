@@ -136,8 +136,7 @@ class _TxnAccountState extends State<TxnAccount>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    account != null && _pageName != "Cash"
-                        ? Column(
+                    Column(
                             children: [
                               SizedBox(
                                 height: 10,
@@ -147,15 +146,13 @@ class _TxnAccountState extends State<TxnAccount>
                                     Provider.of<TransactionServices>(context,
                                             listen: false)
                                         .updateAccount(
-                                            account, context, "Delete");
+                                            account!, context, "Delete");
                                     Navigator.pop(context);
                                   },
                                   icon: Icon(Icons.delete)),
                             ],
                           )
-                        : SizedBox(
-                            height: 20,
-                          ),
+                       ,
                     Center(
                         child: account == null
                             ? Text(

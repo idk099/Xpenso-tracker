@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import "package:flutter/material.dart";
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:xpenso/Data/defaulttxnaccountdata.dart';
+import 'package:xpenso/services/Provider/transactionservices.dart';
 import 'package:xpenso/services/synctohive.dart';
 
 class Authenticate {
@@ -18,6 +20,7 @@ class Authenticate {
       required String email,
       required String password}) async {
     try {
+      TransactionServices().clearBoxes();
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       print("signed in");
       await FirestoreToHiveSyncService().syncFirestoreToHive();
@@ -35,6 +38,8 @@ class Authenticate {
     try {
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+
+      addTxnAccount();
       Navigator.pop(context);
       try {
         final uid = _auth.currentUser!.uid;
@@ -64,6 +69,7 @@ class Authenticate {
 
   Future gsignin() async {
     try {
+      TransactionServices().clearBoxes();
       GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
       GoogleSignInAuthentication googleAuth =
           await googleSignInAccount!.authentication;
@@ -71,14 +77,19 @@ class Authenticate {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
+
       UserCredential authResult = await _auth.signInWithCredential(credential);
       User? user = authResult.user;
+        await FirestoreToHiveSyncService().syncFirestoreToHive();
+      
 
       if (user != null && authResult.additionalUserInfo!.isNewUser) {
+
         await usercollect.doc(user.uid).set({
           'Name': user.displayName,
           'Email': user.email,
         });
+           addTxnAccount();
       }
 
       print('User signed up: ${user?.displayName}');

@@ -31,7 +31,8 @@ class _MainScreenPagesLayoutState extends State<MainScreenPagesLayout> {
   Widget build(BuildContext context) {
      final islightmode = Theme.of(context).brightness == Brightness.light;
     return Scaffold(
-      body: PageView(
+      body:
+       PageView(
         controller: _pageController,
         onPageChanged: (index) {
           setState(() {
@@ -48,46 +49,38 @@ class _MainScreenPagesLayoutState extends State<MainScreenPagesLayout> {
          
         ],
       ),
-      bottomNavigationBar:  Card(
-        elevation: 6,
-        margin: EdgeInsets.all(16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: SalomonBottomBar(
-            curve: Curves.linear,
-            selectedItemColor: islightmode ? Colors.black : Color.fromARGB(255, 181, 131, 131),
-            backgroundColor: islightmode ? const Color.fromARGB(255, 175, 224, 248) : Colors.black12,
-            unselectedItemColor: Colors.grey,
-            items: [
-
-               SalomonBottomBarItem(
-                  icon: Icon(Icons.home_outlined, color: islightmode ? Colors.black : Colors.white),
-                  title: Text('Home')),
-                 
-                  
-                  SalomonBottomBarItem(
-                  icon: Icon(Icons.receipt_long_sharp, color: islightmode ? Colors.black : Colors.white),
-                  title: Text('Records')),
-                  SalomonBottomBarItem(
-                  icon: Icon(Icons.money, color: islightmode ? Colors.black : Colors.white),
-                  title: Text('Budget')),
-              SalomonBottomBarItem(
-                  icon: Icon(Icons.credit_card, color: islightmode ? Colors.black : Colors.white),
-                  title: Text('Account')),
-                  
-              
+      bottomNavigationBar:  SalomonBottomBar(
+        curve: Curves.linear,
+        selectedItemColor: islightmode ? Colors.black : Color.fromARGB(255, 181, 131, 131),
+        backgroundColor: islightmode ? const Color.fromARGB(255, 175, 224, 248) : Colors.black12,
+        unselectedItemColor: Colors.grey,
+        items: [
+      
+           SalomonBottomBarItem(
+              icon: Icon(Icons.home_outlined, color: islightmode ? Colors.black : Colors.white),
+              title: Text('Home')),
+             
               
               SalomonBottomBarItem(
-                  icon: Icon(Icons.analytics_outlined, color: islightmode ? Colors.black : Colors.white),
-                  title: Text('Analysis')),
-
-                 
-            ],
-            currentIndex: _selectedIndex,
-            onTap:  _onItemTapped,
-          ),
-        ),
+              icon: Icon(Icons.receipt_long_sharp, color: islightmode ? Colors.black : Colors.white),
+              title: Text('Records')),
+              SalomonBottomBarItem(
+              icon: Icon(Icons.money, color: islightmode ? Colors.black : Colors.white),
+              title: Text('Budget')),
+          SalomonBottomBarItem(
+              icon: Icon(Icons.credit_card, color: islightmode ? Colors.black : Colors.white),
+              title: Text('Account')),
+              
+          
+          
+          SalomonBottomBarItem(
+              icon: Icon(Icons.analytics_outlined, color: islightmode ? Colors.black : Colors.white),
+              title: Text('Analysis')),
+      
+             
+        ],
+        currentIndex: _selectedIndex,
+        onTap:  _onItemTapped,
       ),
     );
   }

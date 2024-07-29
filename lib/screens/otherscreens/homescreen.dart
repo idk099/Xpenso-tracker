@@ -31,56 +31,54 @@ class HomeScreen extends StatelessWidget {
       signout: () {
         signOutDialog(context);
       },
-      body: Column(
-        children: [
-          Row(
-            children: [
-              SizedBox(
-                height: 78,
-                child: StreamBuilder<DocumentSnapshot>(
-                  stream: userRef.snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting ||
-                        snapshot.hasError ||
-                        !snapshot.hasData ||
-                        !snapshot.data!.exists) {
-                      return SizedBox(
-                        height: 30,
-                      );
-                    }
-
-                    final userName = snapshot.data!['Name'];
-
-                    return Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(16),
-                        child: SizedBox(
-                          height: 40,
-                          child: Text(
-                            'Hello, $userName',
-                            style: TextStyle(
-                              fontSize: 24,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 2,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                SizedBox(
+                  height: 78,
+                  child: StreamBuilder<DocumentSnapshot>(
+                    stream: userRef.snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting ||
+                          snapshot.hasError ||
+                          !snapshot.hasData ||
+                          !snapshot.data!.exists) {
+                        return SizedBox(
+                          height: 30,
+                        );
+                      }
+        
+                      final userName = snapshot.data!['Name'];
+        
+                      return Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(16),
+                          child: SizedBox(
+                            height: 40,
+                            child: Text(
+                              'Hello, $userName',
+                              style: TextStyle(
+                                fontSize: 24,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 2,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Text(
-            _formattedDate,
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-          ),
-          Container(
-            // Ensures the GridView has a bounded height
-            height: 320,
-            child: Column(
+              ],
+            ),
+            Text(
+              _formattedDate,
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
+            Column(
               children: [
                 SizedBox(
                   height: 20,
@@ -166,7 +164,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
+            
                   SizedBox(
                   height: 20,
                 ),
@@ -209,40 +207,40 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-
-
-
-
-
-
-
-
+            
+            
+            
+            
+            
+            
+            
+            
                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
               
-
+            
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -601,6 +601,13 @@ class TransactionServices extends ChangeNotifier {
     return null;
   }
 
+  void clearBoxes() {
+    _transactionBox.clear();
+    _budgetBox.clear();
+    _accountBox.clear();
+    _categoryBox.clear();
+  }
+
   double getCurrentMonthCategoryWiseTotalExpense(String category) {
     DateTime now = DateTime.now();
     double total = 0.0;
@@ -688,7 +695,10 @@ class TransactionServices extends ChangeNotifier {
   }
 
   double getSavingsCurrentMonth() {
-    return getTotalExpenseForCurrentMonth() - getTotalIncomeForCurrentMonth();
+    print("$getTotalExpenseForCurrentMonth()");
+     print("$getTotalIncomeForCurrentMonth()");
+
+    return  getTotalIncomeForCurrentMonth()  -  getTotalExpenseForCurrentMonth()  ;
   }
 
   void saveCategoryBudget(

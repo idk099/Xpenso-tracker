@@ -18,13 +18,15 @@ import 'package:xpenso/notification/notificationpage.dart';
 import 'package:xpenso/notification/budgetnotification.dart';
 import 'package:xpenso/screens/otherscreens/accounts.dart';
 import 'package:xpenso/screens/otherscreens/homescreen.dart';
-import 'package:xpenso/screens/otherscreens/transactionrecord.dart';
+import 'package:xpenso/screens/splash.dart';
+
 import 'package:xpenso/services/Provider/categoryservices.dart';
-import 'package:xpenso/services/new.dart';
+import 'package:xpenso/services/listners.dart';
 import 'package:xpenso/services/Provider/themePreference.dart';
 import 'package:xpenso/services/Provider/transactionservices.dart';
 import 'package:xpenso/services/other/streambuilder.dart';
 import 'package:xpenso/widgets/layout/mainscreenlayout.dart';
+
 
 final navigatorKey = GlobalKey<NavigatorState>();
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -106,7 +108,7 @@ class MyApp extends StatelessWidget {
             themeMode: themeProvider.theme,
             theme: ThemeClass.lightTheme,
             darkTheme: ThemeClass.darkTheme,
-            home: Start());
+            home: Splash());
       },
     );
   }

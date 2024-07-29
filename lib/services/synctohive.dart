@@ -5,12 +5,15 @@ import 'package:xpenso/Models/accountmodel.dart';
 import 'package:xpenso/Models/budgetmodel.dart';
 import 'package:xpenso/Models/categorymodel.dart';
 import 'package:xpenso/Models/transactionmodel.dart';
+import 'package:xpenso/services/Provider/transactionservices.dart';
 
 class FirestoreToHiveSyncService {
   final c.FirebaseFirestore _firestore = c.FirebaseFirestore.instance;
   final uid = FirebaseAuth.instance.currentUser!.uid;
 
   Future<void> syncFirestoreToHive() async {
+   
+
     await syncExpensesFromFirestore();
     await syncCategoriesFromFirestore();
     await syncAccountsFromFirestore();
